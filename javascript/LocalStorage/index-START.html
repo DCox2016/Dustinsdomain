@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LocalStorage</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!--
+      Fish SVG Cred:
+      https://thenounproject.com/search/?q=fish&i=589236
+   -->
+
+   <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 100" x="0px" y="0px"><title>Artboard 17</title><path d="M21.88,79.12a21.54,21.54,0,0,0,3.14-1,39.18,39.18,0,0,0,7.2-3.73,45.88,45.88,0,0,0,4.22-3.09,29.35,29.35,0,0,0,4-4.11C41.76,65.62,43,64,44.29,62.27a36,36,0,0,0,3.3-5.7,21.29,21.29,0,0,1,3.63-5.37,15.64,15.64,0,0,1,5.18-3.54c.89-.41,1.78-.81,2.62-1.22a1.55,1.55,0,0,0,.23-.15,7.61,7.61,0,0,0,7.46-1.94l2.74-2.74,0,0L81.35,29.7a1.5,1.5,0,1,0-2.12-2.12L68,38.82a.61.61,0,0,1-.86,0L65.8,37.48a.61.61,0,0,1,0-.86L77,25.38a1.5,1.5,0,0,0-2.12-2.12L63.68,34.5a.61.61,0,0,1-.86,0l-1.33-1.33a.61.61,0,0,1,0-.86L72.71,21.06a1.5,1.5,0,1,0-2.12-2.12L58.92,30.61h0l-3,3A7.61,7.61,0,0,0,54,41a1.53,1.53,0,0,0-.15.23c-.42.84-.81,1.73-1.22,2.62a15.64,15.64,0,0,1-3.54,5.18,21.29,21.29,0,0,1-5.37,3.63A36,36,0,0,0,38,56c-1.69,1.28-3.36,2.54-4.91,3.81a29.36,29.36,0,0,0-4.11,4,45.9,45.9,0,0,0-3.09,4.22,39.18,39.18,0,0,0-3.73,7.2,21.55,21.55,0,0,0-1,3.14Z"/><path d="M32.82,40.42a43.52,43.52,0,0,0,12.81,7.63A13.8,13.8,0,0,0,47,46.91l0,0,0,0a12.18,12.18,0,0,0,2.59-3.69L26.57,20.08a3.23,3.23,0,0,0-4.57,0c-2.63,2.63,1.94,11.47,4.57,14.1Z"/><path d="M77,68.07a45.86,45.86,0,0,0-3.09-4.22,29.35,29.35,0,0,0-4.11-4c-1.56-1.27-3.23-2.52-4.91-3.81a36,36,0,0,0-5.7-3.3A26.69,26.69,0,0,1,56.31,51a11.24,11.24,0,0,0-2.88,2.18l0,0,0,0h0a25.65,25.65,0,0,1,1.94,3.29,36,36,0,0,0,3.3,5.7c1.28,1.69,2.54,3.36,3.81,4.91a29.35,29.35,0,0,0,4,4.11,45.9,45.9,0,0,0,4.22,3.09,39.19,39.19,0,0,0,7.2,3.73,21.55,21.55,0,0,0,3.14,1l.71-.71a21.57,21.57,0,0,0-1-3.14A39.18,39.18,0,0,0,77,68.07Z"/><text x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Bernar  Novalyi</text><text x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg>
+
+  <div class="wrapper">
+    <h2>LOCAL TAPAS</h2>
+    <p></p>
+    <ul class="plates">
+      <li>Loading Tapas...</li>
+    </ul>
+    <form class="add-items">
+      <input type="text" name="item" placeholder="Item Name" required>
+      <input type="submit" value="+ Add Item">
+    </form>
+  </div>
+
+<script>
+  const addItems = document.querySelector('.add-items');
+  const itemsList = document.querySelector('.plates');
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  function addItem(e) {
+    e.preventDefault();
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text,
+      done: false
+    };
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset();
+  }
+
+  function populateList(plates = [], platesList)  {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+      <li>
+      <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+      <label for="item${i}">${plate.text}</label>
+      </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone(e) {
+    if (!e.target.matches('input')) return;
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit', addItem);
+  itemsList.addEventListener('click', toggleDone);
+  populateList(items, itemsList);
+</script>
+
+
+</body>
+</html>
+

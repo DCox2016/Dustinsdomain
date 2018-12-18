@@ -1,0 +1,1 @@
+Run npm install inside of the project and to start local server do npm start

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<h1>Click a box to get the color.</h1>
+
+<body class="bod">
+  <div class="Thistle">
+    <div class="Mistyrose">
+      <div class="Coral">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after { 
+    box-sizing: inherit; 
+  }
+
+  div {
+    width: 100%;
+    padding: 100px;
+  }
+
+  .Thistle {
+    background: thistle;
+  }
+
+  .Mistyrose {
+    background: mistyrose;
+  }
+
+  .Coral {
+    background: coral;
+  }
+</style>
+<h2 class="color">
+  The color of the box is: 
+    <span class="colorIs"></span>
+</h2>
+<script>
+ const divs = document.querySelectorAll('div');
+ const colorIs = document.querySelector('.colorIs');
+ function logText(e) {
+   console.log(this.classList.value);
+   //stop parent from running
+   e.stopPropagation();
+   colorIs.textContent = (this.classList.value);
+  }
+
+
+
+ divs.forEach(div => div.addEventListener('click', logText, {capture: false}));
+ //capture equal true will run the event from top to bottom, false bottom to top.
+ //once keeps the event from being ran more than once
+ 
+
+</script>
+</body>
+</html>
